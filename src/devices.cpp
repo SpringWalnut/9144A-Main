@@ -18,19 +18,13 @@
 namespace my_robot {
 
 // Define motor groups and individual motors
-pros::MotorGroup intake({6, -12});  // Intake motor group on ports 6 and -12
-pros::Motor firstStage(-12,
-                       pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);  // First stage motor
-pros::v5::Motor secondStage(6,
-                            pros::v5::MotorGears::blue);  // Second stage motor
+pros::Motor intake(-12,pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // First stage motor
 pros::adi::DigitalOut mogo('C', false);                   // Mobile goal mechanism on port 'C'
 pros::adi::DigitalOut doinker('D', false);                // Doinker mechanism on port 'D'
-pros::adi::DigitalIn intake_sensor('H');                  // Intake sensor on port 'H'
-pros::adi::DigitalIn wall_sensor('G');                    // Wall sensor on port 'G'
 pros::Optical color_sort(15);
 
 // Define wall stake motor
-pros::Motor wall_stake(-1, pros::v5::MotorGears::red, pros::v5::MotorUnits::degrees);  // Wall stake motor on port -1
+pros::Motor wallStake(-1, pros::v5::MotorGears::red, pros::v5::MotorUnits::degrees);  // Wall stake motor on port -1
 
 // Define left and right motor groups for the drivetrain
 pros::MotorGroup left_motors({-2, 3, -4}, pros::MotorGearset::blue);   // Left motors on ports -2, 3, -4

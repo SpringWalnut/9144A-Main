@@ -15,16 +15,11 @@
 
 namespace my_robot {
 
-extern pros::MotorGroup intake;
-extern pros::Motor firstStage;
-extern pros::v5::Motor secondStage;
+extern pros::Motor intake;
 extern pros::adi::DigitalOut mogo;
 extern pros::adi::DigitalOut doinker;
-extern pros::adi::DigitalIn intake_sensor;
-extern pros::adi::DigitalIn wall_sensor;
 extern pros::Optical color_sort;
-
-extern pros::Motor wall_stake;
+extern pros::Motor wallStake;
 
 // left motors
 extern pros::MotorGroup left_motors;

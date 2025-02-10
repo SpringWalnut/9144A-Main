@@ -5,7 +5,7 @@
 using namespace my_robot;
 bool red_side;
 // AUTONOMOUS ROUTINES
-void redSWP() {
+void RedSWP() {
   red_side = true;
   doinker.set_value(false);
   const int forwardPower = 127;   // Forward motor power (0-127)
@@ -52,7 +52,7 @@ void redSWP() {
   intake.move(0);
 }
 
-void blueSWP() {
+void BlueSWP() {
   red_side = false;
   doinker.set_value(false);
   const int forwardPower = 127;   // Forward motor power (0-127)
@@ -99,7 +99,7 @@ void blueSWP() {
   intake.move(0);
 }
 
-void redNegative() {
+void RedNegative() {
   red_side = true;
   doinker.set_value(false);
   const int forwardPower = 600;   // Forward motor power (0-127)
@@ -133,7 +133,45 @@ void redNegative() {
   chassis.moveToPose(44.15, -11.21, 268.1, 5000);
 }
 
-void skills() {
+void BlueNegative(){
+
+}     
+
+void RedNegativeElims(){
+
+}
+
+void BlueNegativeElims(){
+
+}
+
+void BluePositive(){
+
+}
+
+void BluePositiveElims(){
+  
+}
+
+void RedPositive(){
+  
+}
+
+void RedPositiveElims(){
+  
+}
+
+void Nothing(){
+  
+}
+
+
+
+
+
+
+
+void Skills() {
   red_side = true;
   doinker.set_value(false);
   const int forwardPower = 127;   // Forward motor power (0-127)
