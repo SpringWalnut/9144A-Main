@@ -21,7 +21,7 @@ extern pros::adi::DigitalOut mogo;
 extern pros::adi::DigitalOut doinker;
 extern pros::Optical color_sort;
 extern pros::Motor wallStake;
-
+extern pros::adi::DigitalOut diddy;
 // left motors
 extern pros::MotorGroup left_motors;
 // right motors

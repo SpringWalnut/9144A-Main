@@ -18,26 +18,27 @@
 namespace my_robot {
 
 // Define motor groups and individual motors
-pros::Rotation horizontal_encoder(-4);
-pros::Rotation vertical_encoder(-17);
+pros::Rotation horizontal_encoder(7);
+pros::Rotation vertical_encoder(-16);
 
-pros::Motor intake(-20,pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // First stage motor
+pros::Motor intake(6,pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // First stage motor
 pros::adi::DigitalOut mogo('A', false);                   // Mobile goal mechanism on port 'C'
 pros::adi::DigitalOut doinker('B', false);                // Doinker mechanism on port 'D'
-pros::Optical color_sort(15);
+pros::adi::DigitalOut diddy('C', false);  
+pros::Optical color_sort(11);
 
 // Define wall stake motor
-pros::Motor wallStake(5, pros::v5::MotorGears::red, pros::v5::MotorUnits::degrees);  // Wall stake motor on port -1
+pros::Motor wallStake(-5, pros::v5::MotorGears::red, pros::v5::MotorUnits::degrees);  // Wall stake motor on port -1
 
 // Define left and right motor groups for the drivetrain
-pros::MotorGroup left_motors({10, -9, -18}, pros::MotorGearset::blue);   // Left motors on ports -2, 3, -4
-pros::MotorGroup right_motors({-2, 3, 19}, pros::MotorGearset::blue);  // Right motors on ports 7, -9, 10
+pros::MotorGroup left_motors({-8, 9, -10}, pros::MotorGearset::blue);   // Left motors on ports -2, 3, -4
+pros::MotorGroup right_motors({1, -2, 3}, pros::MotorGearset::blue);  // Right motors on ports 7, -9, 10
 
 // Define the drivetrain
 lemlib::Drivetrain drivetrain(&left_motors, &right_motors, 10.75, lemlib::Omniwheel::NEW_325, 400, 8);
 
 // Define the inertial sensor
-pros::Imu imu(16);  // Inertial sensor on port 16
+pros::Imu imu(20);  // Inertial sensor on port 16
 
 // horizontal tracking wheel
 lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, -2.6);
@@ -65,9 +66,9 @@ lemlib::ControllerSettings lateral_controller(
     17    // Maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings angular_controller(2.6, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(2.754, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              20, // derivative gain (kD)
+                                              20.09, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds

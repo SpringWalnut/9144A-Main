@@ -83,7 +83,7 @@ void colorSort(int waitTimeMs, int stopTimeMs, bool red_side) {
       pros::delay(waitTimeMs);
       intake.move_velocity(0);
       pros::delay(stopTimeMs);
-      intake.move_velocity(600);  // Resume intake
+      intake.move_velocity(-600);  // Resume intake
     }
 
     pros::delay(20);  // Reduce CPU usage

@@ -1,3 +1,4 @@
+#include "devices.h"
 #include "includes.h"
 #include "pros/misc.h"
 #include "pros/misc.hpp"
@@ -9,22 +10,29 @@ void initialize() {
   pros::lcd::initialize();                          // Initialize brain screen
   chassis.calibrate();                              // Calibrate sensors
   chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);  // Set brake mode for chassis motors
-  wallStake.set_brake_mode(MOTOR_BRAKE_HOLD);      // Set brake mode for wall stake motor
+  wallStake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);      // Set brake mode for wall stake motor
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+    {"Red Positive Elims\n", RedPositiveElims},
+    {"Blue Negative Elims\n", BlueNegativeElims},
+    {"Red Negative Elims\n", RedNegativeElims},
+    
+    
+    
+    
+    {"Nothing\n", Nothing},
       {"PID Tuning\n", tuning},
       {"Red Solo Win Point\n", RedSWP},
       {"Blue Solo Win Point\n", BlueSWP},
       {"Red Negative\n", RedNegative},
-      {"Red Negative Elims\n", RedNegativeElims},
+      
       {"Blue Negative\n", BlueNegative},
-      {"Blue Negative Elims\n", BlueNegativeElims},
+      
       {"Blue Positive\n", BluePositive},
       {"Blue Positive Elims\n", BluePositiveElims},
       {"Red Positive\n", RedPositive},
-      {"Red Positive Elims\n", RedPositiveElims},
-      {"Nothing\n", Nothing},
+      
       {"Skills\n", Skills},
       
   });
@@ -43,6 +51,7 @@ void initialize() {
   });
 }
 
+
 void disabled() {}
 
 void competition_initialize() {}
@@ -55,10 +64,14 @@ void autonomous() {
 
 void opcontrol() {
     pros::Controller master(pros::E_CONTROLLER_MASTER);
-
+    chassis.cancelAllMotions();
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
 bool prevButtonLEFTState = false;
 bool doinkerDown = false;
+//const int POSITION_ONE = 220;
+//const int POSITION_TWO = 160;
+//const int MOTOR_SPEED = 100;
+//int toggleState = POSITION_ONE;  // Change to integer to track position
 
     while (true) {
       if (!pros::competition::get_status() &&
@@ -75,18 +88,18 @@ bool doinkerDown = false;
         chassis.arcade(leftY, (rightX * 0.95));
 
         // Mobile Goal Clamp
-        if (master.get_digital(DIGITAL_L2)) {
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
             mogo.set_value(true);
         }
-        if (master.get_digital(DIGITAL_L1)) {
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
             mogo.set_value(false);
         }
 
         // Intake Code
-        if (master.get_digital(DIGITAL_R1)) {
-            intake.move(-127);
-        } else if (master.get_digital(DIGITAL_R2)) {
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             intake.move(127);
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            intake.move(-127);
         } else {
             intake.move(0);
         }
@@ -94,15 +107,45 @@ bool doinkerDown = false;
         // WallStake Code
         wallStake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
+        
+        
         // Button-Controlled WallStake Positions
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-            wallStake.move_absolute(372, 127); // Move to 170 degrees
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
-            wallStake.move_absolute(1450, 127); // Move to 700 degrees
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+            //toggleState = POSITION_ONE; // Reset toggleState to POSITION_ONE when button A is pressed
+            wallStake.move_absolute(45.75, 127); // Move to 40 degrees
+        } 
+        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+            //toggleState = POSITION_ONE; // Reset toggleState to POSITION_ONE when button B is pressed
             wallStake.move_absolute(0, 127); // Move to 0 degrees
         }
+
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+            // Toggle between the two positions
+            //toggleState = (toggleState == POSITION_ONE) ? POSITION_TWO : POSITION_ONE;  // Toggle position
+            //wallStake.move_absolute(toggleState, MOTOR_SPEED);
+
+            wallStake.move_absolute(75, 105);
+            diddy.set_value(true);
+            wallStake.move_absolute(220, 100);
+        }
         
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+            while (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+                wallStake.move(95);
+            }
+            wallStake.brake();
+    
+        }
+        
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            while (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+                wallStake.move(-95);
+            }
+            wallStake.brake();
+
+        }
+
+
         bool currentButtonLEFTState = master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
     if (currentButtonLEFTState && !prevButtonLEFTState) {
         doinkerDown = !doinkerDown; // Toggle the state
@@ -115,4 +158,5 @@ bool doinkerDown = false;
         // Delay to save resources
         pros::delay(25);
     }
+
 }
