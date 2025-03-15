@@ -12,6 +12,7 @@
 #include "pros/motors.h"  // IWYU pragma:  keep
 #include "pros/motors.hpp"
 #include "pros/optical.hpp"  // IWYU pragma:  keep
+#include "pros/rotation.hpp"
 
 namespace my_robot {
 
@@ -31,9 +32,11 @@ extern lemlib::Drivetrain drivetrain;
 // inertial
 extern pros::Imu imu;
 // create an optical shaft encoder connected to ports 'A' and 'B'
-extern pros::adi::Encoder vertical_encoder;
+extern pros::Rotation vertical_encoder;
+extern pros::Rotation horizontal_encoder;
 // vertical tracking wheel
 extern lemlib::TrackingWheel vertical_tracking_wheel;
+extern lemlib::TrackingWheel horizontal_tracking_wheel;
 // setup odom
 extern lemlib::OdomSensors sensors;
 

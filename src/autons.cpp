@@ -12,11 +12,7 @@ void RedSWP() {
   const int reversePower = -127;  // Reverse motor power (0-127)
   const int reverseTimeMs = 300;  // Reverse duration in ms
 
-  // Start a task to handle motor stall detection
-  pros::Task motorTask([&]() {
-    handleMotorStall(secondStage, forwardPower, reversePower, reverseTimeMs);
-  });
-  wall_stake.tare_position();
+
   chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
   chassis.setPose(0, 0, 0);
 
@@ -32,7 +28,7 @@ void RedSWP() {
   chassis.moveToPose(-25.25, -0.85, -90, 2500);
   chassis.waitUntilDone();
   mogo.set_value(false);
-  pros::Task stop(stopIntakeOnSecondPress);
+  //pros::Task stop(stopIntakeOnSecondPress);
   intake.move(127);
   chassis.moveToPose(-40, -6.85, -90, 1000);
   chassis.waitUntilDone();
@@ -59,11 +55,7 @@ void BlueSWP() {
   const int reversePower = -127;  // Reverse motor power (0-127)
   const int reverseTimeMs = 300;  // Reverse duration in ms
 
-  // Start a task to handle motor stall detection
-  pros::Task motorTask([&]() {
-    handleMotorStall(secondStage, forwardPower, reversePower, reverseTimeMs);
-  });
-  wall_stake.tare_position();
+
   chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
   chassis.setPose(0, 0, 0);
 
@@ -79,7 +71,7 @@ void BlueSWP() {
   chassis.moveToPose(25.25, -0.85, 90, 2500);
   chassis.waitUntilDone();
   mogo.set_value(false);
-  pros::Task stop(stopIntakeOnSecondPress);
+  //pros::Task stop(stopIntakeOnSecondPress);
   intake.move(127);
   chassis.moveToPose(40, -6.85, 90, 1000);
   chassis.waitUntilDone();
@@ -106,11 +98,7 @@ void RedNegative() {
   const int reversePower = -600;  // Reverse motor power (0-127)
   const int reverseTimeMs = 300;  // Reverse duration in ms
 
-  // Start a task to handle motor stall detection
-  pros::Task motorTask([&]() {
-    handleMotorStall(secondStage, forwardPower, reversePower, reverseTimeMs);
-  });
-  wall_stake.tare_position();
+
   chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
   chassis.setPose(0, 0, 0);
 
@@ -129,7 +117,7 @@ void RedNegative() {
   chassis.waitUntilDone();
   chassis.turnToHeading(268, 500);
   chassis.waitUntilDone();
-  pros::Task top(intakeAutomation);
+  //pros::Task top(intakeAutomation);
   chassis.moveToPose(44.15, -11.21, 268.1, 5000);
 }
 
@@ -165,6 +153,12 @@ void Nothing(){
   
 }
 
+void tuning() {
+  // set position to x:0, y:0, heading:0
+  chassis.setPose(0, 0, 0);
+  // turn to face heading 90 with a very long timeout
+  chassis.turnToHeading(90, 100000);
+}
 
 
 
@@ -178,12 +172,7 @@ void Skills() {
   const int reversePower = -127;  // Reverse motor power (0-127)
   const int reverseTimeMs = 300;  // Reverse duration in ms
 
-  // Start a task to handle motor stall detection
-  pros::Task motorTask([&]() {
-    handleMotorStall(secondStage, forwardPower, reversePower, reverseTimeMs);
-  });
-  wall_stake.set_brake_mode(pros::MotorBrake::brake);
-  wall_stake.tare_position();
+
   chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
   chassis.setPose(0, 0, 0);
 
@@ -209,7 +198,7 @@ void Skills() {
   chassis.moveToPose(-60.75, 1, 160, 1500, {.forwards = false});
   chassis.waitUntilDone();
   mogo.set_value(false);
-  pros::Task first(stopIntakeOnFirstPress);
+  //pros::Task first(stopIntakeOnFirstPress);
   intake.move(127);
   chassis.moveToPose(-24.75, -34.2, 135, 1500);
   chassis.waitUntilDone();
@@ -234,8 +223,8 @@ void Skills() {
   chassis.waitUntilDone();
   wallThings(320);
   pros::delay(2000);
-  first.remove();
-  first.resume();
+  //first.remove();
+  //first.resume();
   chassis.moveToPose(46.8, -83, 208, 1000);
   chassis.waitUntilDone();
   chassis.moveToPose(23.25, -117.5, 35, 3000, {.forwards = false});
@@ -248,8 +237,8 @@ void Skills() {
   chassis.moveToPose(60, -123, 290, 1000, {.forwards = false});
   chassis.waitUntilDone();
   mogo.set_value(false);
-  first.remove();
-  first.resume();
+  //first.remove();
+  //first.resume();
   chassis.moveToPose(45.75, -104.25, 320, 1500);
   chassis.waitUntilDone();
   chassis.moveToPose(0, -105.75, 90, 2000, {.forwards = false});

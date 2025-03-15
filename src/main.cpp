@@ -1,4 +1,6 @@
 #include "includes.h"
+#include "pros/misc.h"
+#include "pros/misc.hpp"
 #include "pros/motors.h"
 
 using namespace my_robot;
@@ -11,6 +13,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+      {"PID Tuning\n", tuning},
       {"Red Solo Win Point\n", RedSWP},
       {"Blue Solo Win Point\n", BlueSWP},
       {"Red Negative\n", RedNegative},
@@ -32,9 +35,9 @@ void initialize() {
   pros::Task screen_task([&]() {
     while (true) {
       // Print robot location to the brain screen
-      pros::lcd::print(0, "X: %f", chassis.getPose().x);          // X-coordinate
-      pros::lcd::print(1, "Y: %f", chassis.getPose().y);          // Y-coordinate
-      pros::lcd::print(2, "Theta: %f", chassis.getPose().theta);  // Heading
+      pros::lcd::print(2, "X: %f", chassis.getPose().x);          // X-coordinate
+      pros::lcd::print(3, "Y: %f", chassis.getPose().y);          // Y-coordinate
+      pros::lcd::print(4, "Theta: %f", chassis.getPose().theta);  // Heading
       pros::delay(20);                                            // Delay to save resources
     }
   });
@@ -45,7 +48,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-  ez::as::auton_selector.selected_auton_call();  // Calls selected autonomous routine from autonomous selector
+ ez::as::auton_selector.selected_auton_call();  // Calls selected autonomous routine from autonomous selector
 }
 
 // OPERATOR CONTROL
@@ -58,6 +61,12 @@ bool prevButtonLEFTState = false;
 bool doinkerDown = false;
 
     while (true) {
+      if (!pros::competition::get_status() &&
+          (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) &&
+          master.get_digital(pros::E_CONTROLLER_DIGITAL_UP))) {
+       autonomous();
+      }
+
         // Get left Y and right X positions
         int leftY = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);

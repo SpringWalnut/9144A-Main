@@ -18,37 +18,38 @@
 namespace my_robot {
 
 // Define motor groups and individual motors
-pros::Motor intake(-12,pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // First stage motor
-pros::adi::DigitalOut mogo('C', false);                   // Mobile goal mechanism on port 'C'
-pros::adi::DigitalOut doinker('D', false);                // Doinker mechanism on port 'D'
+pros::Rotation horizontal_encoder(-4);
+pros::Rotation vertical_encoder(-17);
+
+pros::Motor intake(-20,pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // First stage motor
+pros::adi::DigitalOut mogo('A', false);                   // Mobile goal mechanism on port 'C'
+pros::adi::DigitalOut doinker('B', false);                // Doinker mechanism on port 'D'
 pros::Optical color_sort(15);
 
 // Define wall stake motor
-pros::Motor wallStake(-1, pros::v5::MotorGears::red, pros::v5::MotorUnits::degrees);  // Wall stake motor on port -1
+pros::Motor wallStake(5, pros::v5::MotorGears::red, pros::v5::MotorUnits::degrees);  // Wall stake motor on port -1
 
 // Define left and right motor groups for the drivetrain
-pros::MotorGroup left_motors({-2, 3, -4}, pros::MotorGearset::blue);   // Left motors on ports -2, 3, -4
-pros::MotorGroup right_motors({7, -9, 10}, pros::MotorGearset::blue);  // Right motors on ports 7, -9, 10
+pros::MotorGroup left_motors({10, -9, -18}, pros::MotorGearset::blue);   // Left motors on ports -2, 3, -4
+pros::MotorGroup right_motors({-2, 3, 19}, pros::MotorGearset::blue);  // Right motors on ports 7, -9, 10
 
 // Define the drivetrain
-lemlib::Drivetrain drivetrain(&left_motors, &right_motors, 12.0, lemlib::Omniwheel::NEW_325, 400, 8);
+lemlib::Drivetrain drivetrain(&left_motors, &right_motors, 10.75, lemlib::Omniwheel::NEW_325, 400, 8);
 
 // Define the inertial sensor
-pros::Imu imu(5);  // Inertial sensor on port 5
+pros::Imu imu(16);  // Inertial sensor on port 16
 
-// Define the vertical encoder
-pros::adi::Encoder vertical_encoder('A', 'B', true);  // Optical shaft encoder on ports 'A' and 'B'
-
-// Define the vertical tracking wheel
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_275, .45);
-
+// horizontal tracking wheel
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, -2.6);
+// vertical tracking wheel
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, .5);
 // Setup odometry sensors
-lemlib::OdomSensors sensors(
-    &vertical_tracking_wheel,  // Vertical tracking wheel 1
-    nullptr,                   // Vertical tracking wheel 2 (not used)
-    nullptr,                   // Horizontal tracking wheel 1 (not used)
-    nullptr,                   // Horizontal tracking wheel 2 (not used)
-    &imu                       // Inertial sensor
+lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel 1, set to null
+                            nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
+                            &horizontal_tracking_wheel, // horizontal tracking wheel 1
+                            nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
+                            &imu // inertial sensor
+
 );
 
 // Define PID controllers
@@ -64,16 +65,15 @@ lemlib::ControllerSettings lateral_controller(
     17    // Maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings angular_controller(
-    2.245,  // Proportional gain (kP)
-    0.00,   // Integral gain (kI)
-    15,     // Derivative gain (kD)
-    0,      // Anti windup
-    0,      // Small error range, in degrees
-    0,      // Small error range timeout, in milliseconds
-    0,      // Large error range, in degrees
-    0,      // Large error range timeout, in milliseconds
-    0       // Maximum acceleration (slew)
+lemlib::ControllerSettings angular_controller(2.6, // proportional gain (kP)
+                                              0, // integral gain (kI)
+                                              20, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
 );
 
 // Create the chassis
@@ -83,5 +83,4 @@ lemlib::Chassis chassis(
     angular_controller,  // Angular PID settings
     sensors              // Odometry sensors
 );
-
-}  // namespace my_robot
+}
